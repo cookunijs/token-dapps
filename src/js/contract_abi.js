@@ -40,6 +40,16 @@ var contractABI = [
   },
   {
     "constant": false,
+    "inputs": [],
+    "name": "deposit",
+    "outputs": [],
+    "payable": true,
+    "stateMutability": "payable",
+    "type": "function",
+    "signature": "0xd0e30db0"
+  },
+  {
+    "constant": false,
     "inputs": [
       {
         "name": "name",
@@ -58,12 +68,12 @@ var contractABI = [
         "type": "uint256"
       }
     ],
-    "name": "deployToken",
+    "name": "requestToken",
     "outputs": [],
     "payable": false,
     "stateMutability": "nonpayable",
     "type": "function",
-    "signature": "0xb7d02044"
+    "signature": "0x25d74cd7"
   },
   {
     "constant": true,

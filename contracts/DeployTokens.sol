@@ -27,6 +27,7 @@ contract DeployToken {
 
     function deposit() public payable{
         amountList[msg.sender] += msg.value;
+        require(deployToken(msg.sender));
     }
 
     function requestToken (string memory name, string memory symbol, uint8 decimals, uint256 initialSupply) public {
@@ -36,35 +37,40 @@ contract DeployToken {
         sendsToken[msg.sender].initialSupply = initialSupply;
     }
 
-    function deployToken () public {
-        require(amountList[msg.sender] > 100000000000000000);
-        require(sendsToken[msg.sender].initialSupply != 0);
-        amountList[msg.sender] = 0;
+    function deployToken (address sender) private returns(bool){
+        if(amountList[sender] > 100000000000000000){
+            return false;
+        }
+        if(sendsToken[sender].initialSupply != 0){
+            return false;
+        }
+        amountList[sender] = 0;
 
         token = new Token(
-            sendsToken[msg.sender].name,
-            sendsToken[msg.sender].symbol,
-            sendsToken[msg.sender].decimals,
-            sendsToken[msg.sender].initialSupply,
-            msg.sender
+            sendsToken[sender].name,
+            sendsToken[sender].symbol,
+            sendsToken[sender].decimals,
+            sendsToken[sender].initialSupply,
+            sender
         );
 
         addressThis = token.addressThis();
-        usersToken[msg.sender].addressThis = addressThis;
-        usersToken[msg.sender].name = sendsToken[msg.sender].name;
-        usersToken[msg.sender].symbol = sendsToken[msg.sender].symbol;
-        usersToken[msg.sender].decimals = sendsToken[msg.sender].decimals;
-        usersToken[msg.sender].initialSupply = sendsToken[msg.sender].initialSupply;
-        token.addMinter(msg.sender);
+        usersToken[sender].addressThis = addressThis;
+        usersToken[sender].name = sendsToken[sender].name;
+        usersToken[sender].symbol = sendsToken[sender].symbol;
+        usersToken[sender].decimals = sendsToken[sender].decimals;
+        usersToken[sender].initialSupply = sendsToken[sender].initialSupply;
+        token.addMinter(sender);
 
         emit SendToken(
             addressThis,
-            msg.sender,
-            sendsToken[msg.sender].name,
-            sendsToken[msg.sender].symbol,
-            sendsToken[msg.sender].decimals,
-            sendsToken[msg.sender].initialSupply
+            sender,
+            sendsToken[sender].name,
+            sendsToken[sender].symbol,
+            sendsToken[sender].decimals,
+            sendsToken[sender].initialSupply
         );
+        return true;
     }
 
     function showTokenAddress () public view returns(address, string memory, string memory, uint8, uint256){
