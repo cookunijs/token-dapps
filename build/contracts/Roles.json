@@ -1,14 +1,14 @@
 {
   "contractName": "Roles",
   "abi": [],
-  "bytecode": "0x604c602c600b82828239805160001a60731460008114601c57601e565bfe5b5030600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea165627a7a7230582022ed4c1775cf703d2b99fc94c0551d64ba4561c0e8057adf66a7aedca4b222e50029",
-  "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600080fdfea165627a7a7230582022ed4c1775cf703d2b99fc94c0551d64ba4561c0e8057adf66a7aedca4b222e50029",
+  "bytecode": "0x604c602c600b82828239805160001a60731460008114601c57601e565bfe5b5030600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea165627a7a72305820282412bc9fbc4944032a0f03391627d13c56599e932af53bc448bba3bd7522890029",
+  "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600080fdfea165627a7a72305820282412bc9fbc4944032a0f03391627d13c56599e932af53bc448bba3bd7522890029",
   "sourceMap": "108:842:3:-;;132:2:-1;166:7;155:9;146:7;137:37;252:7;246:14;243:1;238:23;232:4;229:33;270:1;265:20;;;;222:63;;265:20;274:9;222:63;;298:9;295:1;288:20;328:4;319:7;311:22;352:7;343;336:24",
   "deployedSourceMap": "108:842:3:-;;;;;;;;",
   "source": "pragma solidity ^0.5.0;\n\n/**\n * @title Roles\n * @dev Library for managing addresses assigned to a Role.\n */\nlibrary Roles {\n    struct Role {\n        mapping (address => bool) bearer;\n    }\n\n    /**\n     * @dev give an account access to this role\n     */\n    function add(Role storage role, address account) internal {\n        require(account != address(0));\n        require(!has(role, account));\n\n        role.bearer[account] = true;\n    }\n\n    /**\n     * @dev remove an account's access to this role\n     */\n    function remove(Role storage role, address account) internal {\n        require(account != address(0));\n        require(has(role, account));\n\n        role.bearer[account] = false;\n    }\n\n    /**\n     * @dev check if an account has this role\n     * @return bool\n     */\n    function has(Role storage role, address account) internal view returns (bool) {\n        require(account != address(0));\n        return role.bearer[account];\n    }\n}\n",
-  "sourcePath": "/Users/kaetaru/token-dapps/node_modules/openzeppelin-solidity/contracts/access/Roles.sol",
+  "sourcePath": "/Users/kunii/token-dapps/node_modules/openzeppelin-solidity/contracts/access/Roles.sol",
   "ast": {
-    "absolutePath": "/Users/kaetaru/token-dapps/node_modules/openzeppelin-solidity/contracts/access/Roles.sol",
+    "absolutePath": "/Users/kunii/token-dapps/node_modules/openzeppelin-solidity/contracts/access/Roles.sol",
     "exportedSymbols": {
       "Roles": [
         403
@@ -1281,7 +1281,7 @@
     "src": "0:951:3"
   },
   "legacyAST": {
-    "absolutePath": "/Users/kaetaru/token-dapps/node_modules/openzeppelin-solidity/contracts/access/Roles.sol",
+    "absolutePath": "/Users/kunii/token-dapps/node_modules/openzeppelin-solidity/contracts/access/Roles.sol",
     "exportedSymbols": {
       "Roles": [
         403
@@ -2558,8 +2558,8 @@
     "version": "0.5.0+commit.1d4f565a.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "3.0.1",
-  "updatedAt": "2019-02-15T09:46:49.515Z",
+  "schemaVersion": "3.0.2",
+  "updatedAt": "2019-02-15T15:40:53.028Z",
   "devdoc": {
     "details": "Library for managing addresses assigned to a Role.",
     "methods": {},

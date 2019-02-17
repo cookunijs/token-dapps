@@ -67,6 +67,13 @@
                 <button class="btn btn-primary col-xs-12 " @click="reset">戻る</button>
           </p>
 
+          <div class="alert alert-danger" role="alert" v-if="flag_er">
+            Error!
+          </div>
+          <p v-if="flag_er">
+            <button class="btn btn-primary col-xs-12 " @click="reset">戻る</button>
+          </p>
+
       
       </div>
     </div>
@@ -75,8 +82,8 @@
           let userAccount;
 
           function startApp() {
-              //Replace "YOUR_CONTRACT_ADDRESS" with your contract address  
-              var contractAddress = "0xB66698E4A6F22c2CB685df5e870FB345640C3bb6";
+              //Replace "YOUR_CONTRACT_ADDRESS" with your contract address
+              var contractAddress = "0x59e577CEFdeB7aCE4716691516B24E19cb862fE5";
               contract = new web3js.eth.Contract(contractABI, contractAddress);
   
               var accountInterval = setInterval(function () {
@@ -109,6 +116,7 @@
             data: {
                 flag_new: true,
                 flag_bu: false,
+                flag_er: false,
                 flag_hi: false,
                 address: '',
                 name: 'TokenName',
@@ -120,6 +128,7 @@
             created: function () {
               this.flag_new = true
               this.flag_bu = false
+              flag_er = false
               this.flag_hi = false
               this.address = ''
               this.name = 'TokenName'
@@ -132,6 +141,7 @@
               reset: function(){
                 this.flag_new = true
                 this.flag_bu = false
+                this.flag_er = false
                 this.flag_hi = false
                 this.address = ''
                 this.name = 'TokenName'
@@ -158,10 +168,11 @@
                     .on("error", (error) =>{
                         //Process when transaction is failed
                         console.log(error)
+                        app.error()
                 });
               },
               get: function () {
-                
+
                 contract.methods.showTokenAddress().call().then((_token) =>{
                   token = _token
                   app.show()
@@ -180,11 +191,14 @@
                   console.log(this.balance)
                   this.flag_hi = true
                   this.flag_bu = false
+              },
+              error: function ()  {
+                this.flag_er = true
+                this.flag_bu =  false
               }
-              
             }
           })
-      
+
       </script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>

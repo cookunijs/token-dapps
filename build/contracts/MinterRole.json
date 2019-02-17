@@ -79,9 +79,9 @@
   "sourceMap": "",
   "deployedSourceMap": "",
   "source": "pragma solidity ^0.5.0;\n\nimport \"../Roles.sol\";\n\ncontract MinterRole {\n    using Roles for Roles.Role;\n\n    event MinterAdded(address indexed account);\n    event MinterRemoved(address indexed account);\n\n    Roles.Role private _minters;\n\n    constructor () internal {\n        _addMinter(msg.sender);\n    }\n\n    modifier onlyMinter() {\n        require(isMinter(msg.sender));\n        _;\n    }\n\n    function isMinter(address account) public view returns (bool) {\n        return _minters.has(account);\n    }\n\n    function addMinter(address account) public onlyMinter {\n        _addMinter(account);\n    }\n\n    function renounceMinter() public {\n        _removeMinter(msg.sender);\n    }\n\n    function _addMinter(address account) internal {\n        _minters.add(account);\n        emit MinterAdded(account);\n    }\n\n    function _removeMinter(address account) internal {\n        _minters.remove(account);\n        emit MinterRemoved(account);\n    }\n}\n",
-  "sourcePath": "/Users/kaetaru/token-dapps/node_modules/openzeppelin-solidity/contracts/access/roles/MinterRole.sol",
+  "sourcePath": "/Users/kunii/token-dapps/node_modules/openzeppelin-solidity/contracts/access/roles/MinterRole.sol",
   "ast": {
-    "absolutePath": "/Users/kaetaru/token-dapps/node_modules/openzeppelin-solidity/contracts/access/roles/MinterRole.sol",
+    "absolutePath": "/Users/kunii/token-dapps/node_modules/openzeppelin-solidity/contracts/access/roles/MinterRole.sol",
     "exportedSymbols": {
       "MinterRole": [
         506
@@ -102,7 +102,7 @@
         "src": "0:23:4"
       },
       {
-        "absolutePath": "/Users/kaetaru/token-dapps/node_modules/openzeppelin-solidity/contracts/access/Roles.sol",
+        "absolutePath": "/Users/kunii/token-dapps/node_modules/openzeppelin-solidity/contracts/access/Roles.sol",
         "file": "../Roles.sol",
         "id": 406,
         "nodeType": "ImportDirective",
@@ -1281,7 +1281,7 @@
     "src": "0:940:4"
   },
   "legacyAST": {
-    "absolutePath": "/Users/kaetaru/token-dapps/node_modules/openzeppelin-solidity/contracts/access/roles/MinterRole.sol",
+    "absolutePath": "/Users/kunii/token-dapps/node_modules/openzeppelin-solidity/contracts/access/roles/MinterRole.sol",
     "exportedSymbols": {
       "MinterRole": [
         506
@@ -1302,7 +1302,7 @@
         "src": "0:23:4"
       },
       {
-        "absolutePath": "/Users/kaetaru/token-dapps/node_modules/openzeppelin-solidity/contracts/access/Roles.sol",
+        "absolutePath": "/Users/kunii/token-dapps/node_modules/openzeppelin-solidity/contracts/access/Roles.sol",
         "file": "../Roles.sol",
         "id": 406,
         "nodeType": "ImportDirective",
@@ -2485,8 +2485,8 @@
     "version": "0.5.0+commit.1d4f565a.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "3.0.1",
-  "updatedAt": "2019-02-15T09:46:49.515Z",
+  "schemaVersion": "3.0.2",
+  "updatedAt": "2019-02-15T15:40:53.030Z",
   "devdoc": {
     "methods": {}
   },
