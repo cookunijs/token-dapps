@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>CreateTokenDapps</title>
+    <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script language="javascript" type="text/javascript" src="./src/js/web3.min.js"></script>
+    <script language="javascript" type="text/javascript" src="./src/js/contract_abi.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  </head>
+  <body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">CreateTokenDapps</a>
+        </div>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/create.html">Create</a></li>
+            <li><a href="/history.html">History</a></li>
+            <li><a href="/agreement.html">Agreement</a></li>
+          </ul>
+        </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+    <div class="container">
+        <div id="app">
+            <h1>Created Token List</h1>
+            <h5>作成したTokenの一覧が表示されます。</h5>
+            <div v-for="data in list">
+                <div class="col-md-4">
+                    <div class="panel panel-warning ">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">{{data.name}}</h3>
+                        </div>
+                        <div class="panel-body">
+                            <p>ContractAddress：<span style="font-size:10px">{{data.address}}</span></p>
+                            <p>Name：{{data.name}}</p>
+                            <p>Symbol：{{data.symbol}}</p>
+                            <p>Decimals：{{data.decimals}}</p>
+                            <p>InitialSupply：{{data.balance}}</p>
+                            <p>Time：{{data.time}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let contract;
+        let userAccount;
+
+        function startApp() {
+            //Replace "YOUR_CONTRACT_ADDRESS" with your contract address
+            var contractAddress = "0xFc440Fa7d8bC693DD8433604fBE7B7a5D7479157";
+            contract = new web3js.eth.Contract(contractABI, contractAddress);
+
+            var accountInterval = setInterval(function () {
+                web3.eth.getAccounts((error, accounts) => {
+                    if (accounts[0] !== userAccount) {
+                        userAccount = accounts[0];
+
+                    }
+                });
+            }, 100);
+
+        }
+
+        window.addEventListener('load', function () {
+            // Checking if Web3 has been injected by the browser (Mist/MetaMask)
+            if (typeof web3 !== 'undefined') {
+                // Use Mist/MetaMask's provider
+                web3js = new Web3(web3.currentProvider);
+            } else {
+                alert("Handle the case where the user doesn't have Metamask installed Probably show them a message prompting them to install Metamask")
+            }
+            // Now you can start your app & access web3 freely:
+            startApp()
+        })
+
+        var app = new Vue({
+            el: '#app',
+            data: {
+                numbers: 0,
+                decimals: 0,
+                list: [],
+            },
+            methods: {
+                window:onload = async function() {
+                    setTimeout(async () => {
+                        await app.history()
+                    }, 1000)
+                },
+                history: async function() {
+                    await app.Listlength()
+                    for(let i = 0; i < this.numbers; i++){
+                        await app.get(i)
+                    }
+
+                },
+                Listlength: async function() {
+                    await contract.methods.userTokenListLength().call({ from: userAccount }).then((index) => {
+                        this.numbers = index
+                    }).catch((err) => {
+                        console.log(err)
+                    })
+                },
+                get: async function (number) {
+                    await contract.methods.showToken(number).call({ from: userAccount }).then((token) => {
+                    app.show(token)
+                    }).catch((err) => {
+                        console.log(err)
+                    })
+                },
+                show: function (token){
+                    this.decimals = token[3]
+                    const data = {
+                        address: token[0],
+                        name: token[1],
+                        symbol: token[2],
+                        decimals: token[3],
+                        balance: token[4] / (10**this.decimals),
+                        time: token[5]
+                    }
+                    this.list.push(data)
+                }
+            }
+        })
+
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  </body>
+</html>
+<style type="text/css">
+    h1 {
+        padding: 0 0 15px 0;
+    }
+    h5 {
+        padding: 0 5px 25px 5px;
+    }
+</style>
+
+

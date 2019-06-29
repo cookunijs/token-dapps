@@ -27,48 +27,6 @@ var contractABI = [
 		"type": "function"
 	},
 	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"name": "tokenAddress",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "sender",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"name": "name",
-				"type": "string"
-			},
-			{
-				"indexed": false,
-				"name": "symbol",
-				"type": "string"
-			},
-			{
-				"indexed": false,
-				"name": "decimals",
-				"type": "uint8"
-			},
-			{
-				"indexed": false,
-				"name": "initialSupply",
-				"type": "uint256"
-			},
-			{
-				"indexed": false,
-				"name": "time",
-				"type": "uint256"
-			}
-		],
-		"name": "SendToken",
-		"type": "event"
-	},
-	{
 		"constant": true,
 		"inputs": [
 			{
@@ -120,5 +78,47 @@ var contractABI = [
 		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"name": "tokenAddress",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "sender",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"name": "symbol",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"name": "decimals",
+				"type": "uint8"
+			},
+			{
+				"indexed": false,
+				"name": "initialSupply",
+				"type": "uint256"
+			},
+			{
+				"indexed": false,
+				"name": "time",
+				"type": "uint256"
+			}
+		],
+		"name": "SendToken",
+		"type": "event"
 	}
 ];

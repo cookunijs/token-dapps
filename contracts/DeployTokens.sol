@@ -6,41 +6,19 @@ contract DeployToken {
 
     Token private token;
     address private addressThis;
-    // struct sendToken {
-    //     string name;
-    //     string symbol;
-    //     uint8 decimals;
-    //     uint256 initialSupply;
-    // }
     struct userToken {
         address addressThis;
         string name;
         string symbol;
         uint8 decimals;
         uint256 initialSupply;
+        uint256 time;
     }
-
-    // mapping(address => uint) amountList;
-    // mapping(address => sendToken) sendsToken;
-    mapping(address => userToken) usersToken;
-    event SendToken(address  tokenAddress, address sender, string name, string  symbol, uint8 decimals, uint256 initialSupply);
-
-    // function deposit() public payable{
-    //     amountList[msg.sender] += msg.value;
-    // }
-
-    // function requestToken (string memory name, string memory symbol, uint8 decimals, uint256 initialSupply) public {
-    //     sendsToken[msg.sender].name = name;
-    //     sendsToken[msg.sender].symbol = symbol;
-    //     sendsToken[msg.sender].decimals = decimals;
-    //     sendsToken[msg.sender].initialSupply = initialSupply;
-    // }
+    
+    mapping(address => userToken[]) usersToken;
+    event SendToken(address  tokenAddress, address sender, string name, string  symbol, uint8 decimals, uint256 initialSupply, uint256 time);
 
     function deployToken (string memory name, string memory symbol, uint8 decimals, uint256 initialSupply) public {
-        // require(amountList[msg.sender] > 100000000000000000);
-        // require(sendsToken[msg.sender].initialSupply != 0);
-        // amountList[msg.sender] = 0;
-
         token = new Token(
             name,
             symbol,
@@ -49,31 +27,43 @@ contract DeployToken {
             msg.sender
         );
 
+        userToken memory CreateToken;
         addressThis = token.addressThis();
-        usersToken[msg.sender].addressThis = addressThis;
-        usersToken[msg.sender].name = name;
-        usersToken[msg.sender].symbol = symbol;
-        usersToken[msg.sender].decimals = decimals;
-        usersToken[msg.sender].initialSupply = initialSupply;
+        CreateToken.addressThis = addressThis;
+        CreateToken.name = name;
+        CreateToken.symbol = symbol;
+        CreateToken.decimals = decimals;
+        CreateToken.initialSupply = initialSupply;
+        CreateToken.time = now;
         token.addMinter(msg.sender);
 
+        usersToken[msg.sender].push(CreateToken);
+        
         emit SendToken(
             addressThis,
             msg.sender,
             name,
             symbol,
             decimals,
-            initialSupply
+            initialSupply,
+            CreateToken.time
         );
     }
 
-    function showTokenAddress () public view returns(address, string memory, string memory, uint8, uint256){
+    function showToken (uint _index) public view returns(address, string memory, string memory, uint8, uint256, uint256){
         return (
-            usersToken[msg.sender].addressThis,
-            usersToken[msg.sender].name,
-            usersToken[msg.sender].symbol,
-            usersToken[msg.sender].decimals,
-            usersToken[msg.sender].initialSupply
+            usersToken[msg.sender][_index].addressThis,
+            usersToken[msg.sender][_index].name,
+            usersToken[msg.sender][_index].symbol,
+            usersToken[msg.sender][_index].decimals,
+            usersToken[msg.sender][_index].initialSupply,
+            usersToken[msg.sender][_index].time
+        );
+    }
+    
+    function userTokenListLength () public view returns(uint256){
+        return (
+            usersToken[msg.sender].length
         );
     }
 

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Ethereum dApps QuickStart</title>
+    <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script language="javascript" type="text/javascript" src="./src/js/web3.min.js"></script>
+    <script language="javascript" type="text/javascript" src="./src/js/contract_abi.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  </head>
+  <body>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+      <!-- Brand and toggle get grouped for better mobile display -->
+      <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/">CreateTokenDapps</a>
+      </div>
+          <ul class="nav navbar-nav navbar-right">
+          <li><a href="/create.html">Create</a></li>
+          <li><a href="/history.html">History</a></li>
+          <li><a href="/agreement.html">Agreement</a></li>
+          </ul>
+      </div><!-- /.navbar-collapse -->
+      </div><!-- /.container-fluid -->
+    </nav>
+    <div class="container">
+          <div id="app">
+          <h1>Create Token</h1>
+          <p v-if="flag_new">名前(Name)、単位(Symbol)、小数点(Decimals,数値)、発行量(InitialSupply,数値)を入力して下さい</p>
+          <form v-if="flag_new">
+            <div class="form-group" rel="publisher">
+              <label for="name">Token Name</label>
+              <input class="form-control" v-model="name" id="name" placeholder="name">
+            </div>
+            <div class="form-group" >
+              <label for="symbol">Token Symbol</label>
+              <input class="form-control" v-model="symbol" placeholder="symbol">
+            </div>
+            <div class="form-group">
+              <label for="decimals">Token Decimals</label>
+              <input class="form-control" v-model="decimals" placeholder="decimals">
+            </div>
+            <div class="form-group">
+              <label for="initialSupply">Token InitialSupply</label>
+              <input class="form-control" v-model="initialSupply" placeholder="initialSupply"><br>
+            </div>
+          </form>
+
+    
+          <p>
+            <!-- <div class="container"> -->
+              <button class="btn btn-primary col-xs-12 " @click="set" v-if="flag_new">Let's create Token!</button>
+            <!-- </div> -->
+          </p>
+          
+          <div class="alert alert-warning" role="alert" v-if="flag_bu">
+              Createing.......
+          </div> 
+          
+          <div class="form-group">
+
+            <div class="panel panel-success" v-if="flag_hi">
+              <div class="panel-heading">
+              <div class="panel-title">
+                Success! Created your Token.
+              </div>
+              </div>
+              <div class="panel-body">
+                <h5 v-if="flag_hi">ContractAddress：{{address}}</h5>
+                <h5 v-if="flag_hi">Name：{{name}}</h5>
+                <h5 v-if="flag_hi">Symbol：{{symbol}}</h5>
+                <h5 v-if="flag_hi">Decimals：{{decimals}}</h5>
+                <h5 v-if="flag_hi">TotalSupply：{{balance}}</h5>
+              </div>
+            </div>
+          </div>
+          
+          <p v-if="flag_hi">
+                <button class="btn btn-primary col-xs-12 " @click="reset">戻る</button>
+          </p>
+
+          <div class="alert alert-danger" role="alert" v-if="flag_er">
+            Error!
+          </div>
+          <p v-if="flag_er">
+            <button class="btn btn-primary col-xs-12 " @click="reset">戻る</button>
+          </p>
+
+
+      </div>
+    </div>
+      <script>
+          let contract;
+          let userAccount;
+
+          function startApp() {
+              //Replace "YOUR_CONTRACT_ADDRESS" with your contract address
+              var contractAddress = "0xFc440Fa7d8bC693DD8433604fBE7B7a5D7479157";
+              contract = new web3js.eth.Contract(contractABI, contractAddress);
+
+              var accountInterval = setInterval(function () {
+                  web3.eth.getAccounts((error, accounts) => {
+                      if (accounts[0] !== userAccount) {
+                          userAccount = accounts[0];
+
+                      }
+                  });
+              }, 100);
+
+          }
+
+          window.addEventListener('load', function () {
+              // Checking if Web3 has been injected by the browser (Mist/MetaMask)
+              if (typeof web3 !== 'undefined') {
+                  // Use Mist/MetaMask's provider
+                  web3js = new Web3(web3.currentProvider);
+              } else {
+                alert("Handle the case where the user doesn't have Metamask installed Probably show them a message prompting them to install Metamask")
+              }
+              // Now you can start your app & access web3 freely:
+              startApp()
+          })
+
+          // token = {}
+          var app = new Vue({
+            el: '#app',
+            data: {
+                flag_new: true,
+                flag_bu: false,
+                flag_er: false,
+                flag_hi: false,
+                address: '',
+                name: '',
+                symbol: '',
+                decimals: '',
+                initialSupply: '',
+                balance: ''
+            },
+            created: function () {
+              this.flag_new = true
+              this.flag_bu = false
+              flag_er = false
+              this.flag_hi = false
+              this.address = ''
+              this.name = ''
+              this.symbol = ''
+              this.decimals = ''
+              this.initialSupply = ''
+              this.balance = ''
+            },
+            methods: {
+              reset: function(){
+                this.flag_new = true
+                this.flag_bu = false
+                this.flag_er = false
+                this.flag_hi = false
+                this.address = ''
+                this.name = ''
+                this.symbol = ''
+                this.decimals = ''
+                this.initialSupply = ''
+                this.balance = ''
+              },
+              set: function (){
+                this.address = ''
+                this.flag_new = false
+                this.flag_bu = true
+                contract.methods.deployToken(this.name, this.symbol, this.decimals, this.initialSupply)
+                    .send({ from: userAccount })
+                    .on("transactionHash",  (txhash) => {
+                        console.log("Txhash: " +  txhash);
+                    })
+                    .then((resolved) => {
+                        //Process when transaction is confirmed
+                        alert("Success")
+                        console.log(resolved)
+                        app.Listlength()
+                    })
+                    .catch((error) => {
+                        //Process when transaction is failed
+                        alert("Error")
+                        console.log(error)
+                        app.error()
+                    })
+
+              },
+              Listlength: function() {
+                contract.methods.userTokenListLength().call({ from: userAccount }).then((index) => {
+                  app.get(index - 1)
+                })
+              },
+              get: function (number) {
+                contract.methods.showToken(number).call({ from: userAccount }).then((token) => {
+                  app.show(token)
+                })
+              },
+              show: function (token){
+                this.address = token[0]
+                this.name = token[1]
+                this.symbol = token[2]
+                this.decimals = token[3]
+                this.balance = token[4] / (10**this.decimals)
+                this.flag_hi = true
+                this.flag_bu = false
+              },
+              error: function ()  {
+                this.flag_er = true
+                this.flag_bu =  false
+              }
+            }
+          })
+
+      </script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  </body>
+</html>
+<style type="text/css">
+  p {
+      font-size: 15px;
+      color:#848484;
+      padding: 15px 0 20px 0;
+  }
+
+  </style>
