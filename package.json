@@ -10,7 +10,7 @@
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {
-    "node-sass": "^4.11.0",
+    "node-sass": "^4.13.1",
     "openzeppelin-solidity": "^2.1.2",
     "sass-loader": "^7.1.0",
     "truffle-contract": "^4.0.5",
